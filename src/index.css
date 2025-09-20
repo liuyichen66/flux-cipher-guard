@@ -1,0 +1,178 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* DAO Risk Dashboard Design System */
+
+@layer base {
+  :root {
+    /* Dark Cyberpunk Base */
+    --background: 220 13% 8%;
+    --foreground: 120 100% 85%;
+
+    --card: 220 15% 10%;
+    --card-foreground: 120 100% 85%;
+
+    --popover: 220 15% 12%;
+    --popover-foreground: 120 100% 85%;
+
+    /* Neon Cyber Primary */
+    --primary: 120 100% 50%;
+    --primary-foreground: 220 13% 8%;
+
+    /* Risk Secondary */
+    --secondary: 0 85% 60%;
+    --secondary-foreground: 0 0% 100%;
+
+    /* Encrypted Muted */
+    --muted: 220 15% 15%;
+    --muted-foreground: 120 30% 65%;
+
+    /* Cyber Accent */
+    --accent: 180 100% 50%;
+    --accent-foreground: 220 13% 8%;
+
+    /* Risk Destructive */
+    --destructive: 0 85% 55%;
+    --destructive-foreground: 0 0% 100%;
+
+    /* Cyber Borders */
+    --border: 120 50% 25%;
+    --input: 220 15% 18%;
+    --ring: 120 100% 50%;
+
+    --radius: 0.75rem;
+
+    /* Custom DAO Colors */
+    --cyber-glow: 120 100% 50%;
+    --risk-high: 0 85% 60%;
+    --risk-medium: 35 100% 55%;
+    --risk-low: 120 60% 45%;
+    --encrypted: 180 100% 50%;
+    --binary: 120 100% 30%;
+    --hazard: 50 100% 50%;
+
+    /* Gradients */
+    --gradient-cyber: linear-gradient(135deg, hsl(var(--cyber-glow)) 0%, hsl(var(--encrypted)) 100%);
+    --gradient-risk: linear-gradient(135deg, hsl(var(--risk-high)) 0%, hsl(var(--risk-medium)) 100%);
+    --gradient-encrypted: linear-gradient(45deg, hsl(var(--encrypted)) 0%, hsl(var(--cyber-glow)) 50%, hsl(var(--encrypted)) 100%);
+
+    /* Shadows */
+    --shadow-cyber: 0 0 20px hsl(var(--cyber-glow) / 0.3);
+    --shadow-risk: 0 0 15px hsl(var(--risk-high) / 0.4);
+    --shadow-encrypted: 0 0 25px hsl(var(--encrypted) / 0.2);
+
+    /* Sidebar Colors */
+    --sidebar-background: 220 15% 8%;
+    --sidebar-foreground: 120 100% 85%;
+    --sidebar-primary: 120 100% 50%;
+    --sidebar-primary-foreground: 220 13% 8%;
+    --sidebar-accent: 220 15% 12%;
+    --sidebar-accent-foreground: 120 100% 85%;
+    --sidebar-border: 120 50% 25%;
+    --sidebar-ring: 120 100% 50%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-mono;
+  }
+
+  /* Binary Rain Animation */
+  @keyframes binary-rain {
+    0% { transform: translateY(-100vh); opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { transform: translateY(100vh); opacity: 0; }
+  }
+
+  @keyframes glow-pulse {
+    0%, 100% { box-shadow: 0 0 10px hsl(var(--cyber-glow) / 0.5); }
+    50% { box-shadow: 0 0 25px hsl(var(--cyber-glow) / 0.8); }
+  }
+
+  @keyframes hazard-glow {
+    0%, 100% { 
+      box-shadow: 0 0 15px hsl(var(--hazard) / 0.6);
+      transform: rotate(0deg);
+    }
+    50% { 
+      box-shadow: 0 0 30px hsl(var(--hazard) / 0.9);
+      transform: rotate(180deg);
+    }
+  }
+
+  @keyframes encrypted-shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+
+  .binary-rain {
+    animation: binary-rain 3s linear infinite;
+  }
+
+  .glow-pulse {
+    animation: glow-pulse 2s ease-in-out infinite;
+  }
+
+  .hazard-glow {
+    animation: hazard-glow 3s ease-in-out infinite;
+  }
+
+  .encrypted-shimmer {
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      hsl(var(--encrypted) / 0.3) 50%,
+      transparent 100%
+    );
+    background-size: 200% 100%;
+    animation: encrypted-shimmer 2s ease-in-out infinite;
+  }
+}
+
+@layer components {
+  .risk-heatmap {
+    @apply relative overflow-hidden rounded-lg border border-border;
+    background: linear-gradient(135deg, 
+      hsl(var(--risk-high) / 0.1) 0%, 
+      hsl(var(--risk-medium) / 0.1) 50%, 
+      hsl(var(--risk-low) / 0.1) 100%);
+  }
+
+  .encrypted-overlay {
+    @apply absolute inset-0 backdrop-blur-sm;
+    background: repeating-linear-gradient(
+      45deg,
+      hsl(var(--encrypted) / 0.1) 0px,
+      hsl(var(--encrypted) / 0.1) 10px,
+      transparent 10px,
+      transparent 20px
+    );
+  }
+
+  .cyber-button {
+    @apply relative overflow-hidden rounded-md border border-primary bg-background px-4 py-2 text-primary transition-all duration-300;
+    box-shadow: 0 0 10px hsl(var(--cyber-glow) / 0.3);
+  }
+
+  .cyber-button:hover {
+    @apply bg-primary text-primary-foreground;
+    box-shadow: 0 0 20px hsl(var(--cyber-glow) / 0.6);
+  }
+
+  .risk-card {
+    @apply rounded-lg border border-border bg-card p-6 transition-all duration-300;
+    box-shadow: 0 4px 12px hsl(var(--background) / 0.1);
+  }
+
+  .risk-card:hover {
+    @apply border-primary;
+    box-shadow: 0 8px 24px hsl(var(--cyber-glow) / 0.2);
+  }
+}
