@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { AlertTriangle, Lock, Eye, EyeOff, TrendingUp, TrendingDown, Filter, BarChart3, Activity, Plus, Vote, FileText } from "lucide-react";
+import { AlertTriangle, Lock, Eye, EyeOff, TrendingUp, TrendingDown, Filter, BarChart3, Activity, Plus, Vote, FileText, Search, Download } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -41,6 +41,7 @@ export const RiskDashboard = ({ isConnected }: RiskDashboardProps) => {
   const [sortBy, setSortBy] = useState<"exposure" | "impact" | "mitigation">("exposure");
   const [showRiskForm, setShowRiskForm] = useState(false);
   const [showProposalForm, setShowProposalForm] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
   
   // Contract integration
   const {
@@ -70,8 +71,17 @@ export const RiskDashboard = ({ isConnected }: RiskDashboardProps) => {
   // Filtered and sorted data
   const filteredData = useMemo(() => {
     let filtered = mockRiskData;
+    
+    // Filter by risk level
     if (filterRisk !== "all") {
       filtered = filtered.filter(item => item.risk === filterRisk);
+    }
+    
+    // Filter by search term
+    if (searchTerm) {
+      filtered = filtered.filter(item => 
+        item.category.toLowerCase().includes(searchTerm.toLowerCase())
+      );
     }
     
     return filtered.sort((a, b) => {
@@ -82,7 +92,7 @@ export const RiskDashboard = ({ isConnected }: RiskDashboardProps) => {
         default: return 0;
       }
     });
-  }, [filterRisk, sortBy]);
+  }, [filterRisk, sortBy, searchTerm]);
 
   const toggleDecryption = (category: string) => {
     if (!isConnected) return;
@@ -356,36 +366,187 @@ export const RiskDashboard = ({ isConnected }: RiskDashboardProps) => {
             </div>
             {isConnected && (
               <div className="flex items-center space-x-4">
+                <div className="relative">
+                  <Search className="h-4 w-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
+                  <Input
+                    placeholder="Search risk categories..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="w-48 pl-10"
+                  />
+                </div>
                 <Select value={filterRisk} onValueChange={(value: any) => setFilterRisk(value)}>
                   <SelectTrigger className="w-32">
                     <Filter className="h-4 w-4 mr-2" />
-                    <SelectValue />
+                    <SelectValue placeholder="Filter by risk level" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all">All Risks</SelectItem>
-                    <SelectItem value="high">High</SelectItem>
-                    <SelectItem value="medium">Medium</SelectItem>
-                    <SelectItem value="low">Low</SelectItem>
+                    <SelectItem value="all">All Risk Categories</SelectItem>
+                    <SelectItem value="high">High Risk Only</SelectItem>
+                    <SelectItem value="medium">Medium Risk Only</SelectItem>
+                    <SelectItem value="low">Low Risk Only</SelectItem>
                   </SelectContent>
                 </Select>
                 <Select value={sortBy} onValueChange={(value: any) => setSortBy(value)}>
                   <SelectTrigger className="w-36">
                     <BarChart3 className="h-4 w-4 mr-2" />
-                    <SelectValue />
+                    <SelectValue placeholder="Sort by metric" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="exposure">Exposure</SelectItem>
-                    <SelectItem value="impact">Impact</SelectItem>
-                    <SelectItem value="mitigation">Mitigation</SelectItem>
+                    <SelectItem value="exposure">Sort by Exposure</SelectItem>
+                    <SelectItem value="impact">Sort by Impact</SelectItem>
+                    <SelectItem value="mitigation">Sort by Mitigation</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
             )}
           </CardTitle>
+          <div className="text-sm text-muted-foreground">
+            {isConnected 
+              ? "Real-time risk analysis with FHE-encrypted data processing. Click the eye icon to decrypt specific risk categories."
+              : "Connect your wallet to access encrypted risk exposure data and participate in governance decisions."
+            }
+          </div>
+          {isConnected && (
+            <div className="mt-3 p-3 rounded-lg bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800">
+              <div className="flex items-start space-x-2">
+                <div className="text-blue-600 dark:text-blue-400 mt-0.5">
+                  <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <div className="text-sm">
+                  <div className="font-medium text-blue-900 dark:text-blue-100">Risk Heatmap Guide</div>
+                  <div className="text-blue-700 dark:text-blue-300 mt-1">
+                    <p>• <strong>Eye Icon:</strong> Click to decrypt/encrypt individual risk categories</p>
+                    <p>• <strong>Filters:</strong> Use dropdown menus to filter by risk level and sort by metrics</p>
+                    <p>• <strong>Progress Bars:</strong> Visual indicators for exposure, impact, and mitigation levels</p>
+                    <p>• <strong>Trend Icons:</strong> Show whether risk levels are increasing, decreasing, or stable</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {filteredData.map((item) => {
+          {/* Risk Statistics Summary */}
+          {isConnected && (
+            <div className="mb-6 p-4 rounded-lg bg-muted/30 border">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-risk-high">
+                    {filteredData.filter(item => item.risk === 'high').length}
+                  </div>
+                  <div className="text-sm text-muted-foreground">High Risk Categories</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-risk-medium">
+                    {filteredData.filter(item => item.risk === 'medium').length}
+                  </div>
+                  <div className="text-sm text-muted-foreground">Medium Risk Categories</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-risk-low">
+                    {filteredData.filter(item => item.risk === 'low').length}
+                  </div>
+                  <div className="text-sm text-muted-foreground">Low Risk Categories</div>
+                </div>
+              </div>
+              <div className="mt-4 flex items-center justify-between">
+                <div className="text-sm text-muted-foreground">
+                  {searchTerm ? (
+                    <>Showing {filteredData.length} results for "{searchTerm}" • </>
+                  ) : (
+                    <>Showing {filteredData.length} risk categories • </>
+                  )}
+                  {decryptedItems.size} decrypted • 
+                  {filteredData.length - decryptedItems.size} encrypted
+                </div>
+                <div className="flex items-center space-x-2">
+                  {searchTerm && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setSearchTerm("")}
+                      className="text-xs"
+                    >
+                      Clear Search
+                    </Button>
+                  )}
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      const allCategories = filteredData.map(item => item.category);
+                      setDecryptedItems(new Set(allCategories));
+                    }}
+                    className="text-xs"
+                  >
+                    Decrypt All
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setDecryptedItems(new Set())}
+                    className="text-xs"
+                  >
+                    Encrypt All
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      const decryptedData = filteredData.filter(item => decryptedItems.has(item.category));
+                      const csvContent = [
+                        'Risk Category,Exposure Level,Impact Level,Mitigation Status,Risk Level,Last Updated',
+                        ...decryptedData.map(item => 
+                          `${item.category},${item.exposure}%,${item.impact}%,${item.mitigation}%,${item.risk.toUpperCase()},${item.lastUpdated}`
+                        )
+                      ].join('\n');
+                      
+                      const blob = new Blob([csvContent], { type: 'text/csv' });
+                      const url = window.URL.createObjectURL(blob);
+                      const a = document.createElement('a');
+                      a.href = url;
+                      a.download = 'risk-exposure-heatmap.csv';
+                      a.click();
+                      window.URL.revokeObjectURL(url);
+                    }}
+                    className="text-xs"
+                  >
+                    Export CSV
+                  </Button>
+                </div>
+              </div>
+            </div>
+          )}
+          
+          {filteredData.length === 0 ? (
+            <div className="text-center py-12">
+              <div className="text-muted-foreground mb-4">
+                <Search className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                <h3 className="text-lg font-medium">No Risk Categories Found</h3>
+                <p className="text-sm">
+                  {searchTerm ? (
+                    <>No risk categories match your search for "{searchTerm}"</>
+                  ) : (
+                    <>No risk categories available for the selected filters</>
+                  )}
+                </p>
+              </div>
+              {searchTerm && (
+                <Button
+                  variant="outline"
+                  onClick={() => setSearchTerm("")}
+                  className="mt-4"
+                >
+                  Clear Search
+                </Button>
+              )}
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {filteredData.map((item) => {
               const isDecrypted = decryptedItems.has(item.category);
               const canView = isConnected && isDecrypted;
 
@@ -410,6 +571,7 @@ export const RiskDashboard = ({ isConnected }: RiskDashboardProps) => {
                             size="sm"
                             onClick={() => toggleDecryption(item.category)}
                             className="h-6 w-6 p-0"
+                            title={isDecrypted ? "Encrypt this risk category" : "Decrypt this risk category"}
                           >
                             {isDecrypted ? (
                               <Eye className="h-3 w-3" />
@@ -437,7 +599,7 @@ export const RiskDashboard = ({ isConnected }: RiskDashboardProps) => {
                       {/* Exposure */}
                       <div className="space-y-1">
                         <div className="flex justify-between text-xs">
-                          <span>Exposure</span>
+                          <span className="font-medium">Exposure Level</span>
                           <span className={getRiskColor(item.risk)}>
                             {canView || !isConnected ? `${item.exposure}%` : "██%"}
                           </span>
@@ -446,6 +608,13 @@ export const RiskDashboard = ({ isConnected }: RiskDashboardProps) => {
                           value={canView || !isConnected ? item.exposure : 50} 
                           className="h-2"
                         />
+                        {canView && (
+                          <div className="text-xs text-muted-foreground">
+                            {item.exposure > 70 ? "Critical exposure level" : 
+                             item.exposure > 40 ? "Moderate exposure level" : 
+                             "Low exposure level"}
+                          </div>
+                        )}
                       </div>
 
                       {/* Impact & Mitigation when decrypted */}
@@ -453,18 +622,28 @@ export const RiskDashboard = ({ isConnected }: RiskDashboardProps) => {
                         <>
                           <div className="space-y-1">
                             <div className="flex justify-between text-xs">
-                              <span>Impact</span>
+                              <span className="font-medium">Potential Impact</span>
                               <span className="text-risk-high">{item.impact}%</span>
                             </div>
                             <Progress value={item.impact} className="h-1.5" />
+                            <div className="text-xs text-muted-foreground">
+                              {item.impact > 80 ? "High impact potential" : 
+                               item.impact > 50 ? "Medium impact potential" : 
+                               "Low impact potential"}
+                            </div>
                           </div>
                           
                           <div className="space-y-1">
                             <div className="flex justify-between text-xs">
-                              <span>Mitigation</span>
+                              <span className="font-medium">Mitigation Status</span>
                               <span className="text-risk-low">{item.mitigation}%</span>
                             </div>
                             <Progress value={item.mitigation} className="h-1.5" />
+                            <div className="text-xs text-muted-foreground">
+                              {item.mitigation > 80 ? "Well mitigated" : 
+                               item.mitigation > 50 ? "Partially mitigated" : 
+                               "Requires attention"}
+                            </div>
                           </div>
                         </>
                       )}
@@ -487,7 +666,8 @@ export const RiskDashboard = ({ isConnected }: RiskDashboardProps) => {
                 </div>
               );
             })}
-          </div>
+            </div>
+          )}
 
           {/* Connection Required Notice */}
           {!isConnected && (
@@ -497,8 +677,13 @@ export const RiskDashboard = ({ isConnected }: RiskDashboardProps) => {
                 <span className="font-medium">Governance Authorization Required</span>
               </div>
               <p className="text-sm text-muted-foreground mt-1">
-                Connect your wallet and verify DAO membership to access risk exposure data.
+                Connect your wallet and verify DAO membership to access encrypted risk exposure data and participate in governance decisions.
               </p>
+              <div className="mt-3 text-xs text-muted-foreground">
+                <p>• FHE-encrypted risk assessments require member verification</p>
+                <p>• Governance participation requires active membership status</p>
+                <p>• All sensitive data is protected with fully homomorphic encryption</p>
+              </div>
             </div>
           )}
         </CardContent>
