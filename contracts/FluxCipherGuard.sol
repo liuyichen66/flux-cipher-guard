@@ -325,4 +325,26 @@ contract FluxCipherGuard {
     function isMemberActive(address member) public view returns (bool) {
         return Fhe.decrypt(isMember[member]);
     }
+    
+    function updateDataAccess(uint256 dataId, ebool isAccessible) public {
+        require(encryptedData[dataId].owner == msg.sender, "Only data owner can update access");
+        require(encryptedData[dataId].owner != address(0), "Data does not exist");
+        
+        encryptedData[dataId].isAccessible = isAccessible;
+    }
+    
+    function revokeDataAccess(uint256 dataId) public {
+        require(encryptedData[dataId].owner == msg.sender, "Only data owner can revoke access");
+        require(encryptedData[dataId].owner != address(0), "Data does not exist");
+        
+        encryptedData[dataId].isAccessible = Fhe.asEbool(false);
+    }
+    
+    function transferDataOwnership(uint256 dataId, address newOwner) public {
+        require(encryptedData[dataId].owner == msg.sender, "Only data owner can transfer");
+        require(newOwner != address(0), "Invalid new owner address");
+        require(encryptedData[dataId].owner != address(0), "Data does not exist");
+        
+        encryptedData[dataId].owner = newOwner;
+    }
 }

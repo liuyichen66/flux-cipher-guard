@@ -1,37 +1,47 @@
 # Flux Cipher Guard
 
-A cutting-edge risk management platform that leverages Fully Homomorphic Encryption (FHE) to provide secure, privacy-preserving analytics for decentralized organizations. Built with React, TypeScript, and integrated with Web3 wallet connectivity.
+> Advanced cryptographic risk management for the decentralized future
 
-## Features
+Flux Cipher Guard revolutionizes risk management through cutting-edge Fully Homomorphic Encryption (FHE) technology, enabling secure computation on encrypted data without ever exposing sensitive information.
 
-- **FHE-Encrypted Risk Assessment**: Create and manage risk assessments with fully homomorphic encryption
-- **Governance Integration**: Participate in DAO governance with encrypted voting and proposal systems
-- **Wallet Connectivity**: Seamless integration with RainbowKit and multiple wallet providers
-- **Real-time Analytics**: Live risk monitoring with encrypted data overlays
-- **Privacy-First Design**: All sensitive data is encrypted using FHE technology
+## 🚀 Core Capabilities
 
-## Technology Stack
+- **🔐 Zero-Knowledge Risk Analysis**: Perform complex risk calculations on encrypted data
+- **🏛️ Decentralized Governance**: Participate in DAO decision-making with privacy-preserving voting
+- **🔗 Multi-Chain Wallet Integration**: Connect seamlessly across different blockchain networks
+- **📊 Real-Time Encrypted Analytics**: Monitor risk metrics with complete data privacy
+- **🛡️ Quantum-Resistant Security**: Future-proof encryption for long-term data protection
 
-- **Frontend**: React 18, TypeScript, Vite
-- **UI Components**: shadcn/ui, Tailwind CSS
-- **Web3 Integration**: RainbowKit, Wagmi, Viem
-- **Blockchain**: Ethereum Sepolia Testnet
-- **Encryption**: FHE (Fully Homomorphic Encryption)
-- **State Management**: TanStack Query
+## 🛠️ Technical Architecture
 
-## Getting Started
+```
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│   Frontend      │    │   Smart         │    │   FHE           │
+│   React + TS    │◄──►│   Contracts     │◄──►│   Encryption    │
+│   RainbowKit    │    │   Solidity      │    │   Layer        │
+└─────────────────┘    └─────────────────┘    └─────────────────┘
+```
+
+**Frontend Stack**: React 18, TypeScript, Vite, Tailwind CSS  
+**Web3 Integration**: RainbowKit, Wagmi, Viem  
+**Blockchain**: Ethereum Sepolia Testnet  
+**Encryption**: Fully Homomorphic Encryption (FHE)  
+**State Management**: TanStack Query
+
+## 🚀 Quick Start
 
 ### Prerequisites
 
 - Node.js 18+ 
 - npm or yarn
 - Git
+- Web3 wallet (MetaMask, WalletConnect, etc.)
 
 ### Installation
 
 ```bash
 # Clone the repository
-git clone https://github.com/liuyichen66/flux-cipher-guard.git
+git clone https://github.com/your-username/flux-cipher-guard.git
 
 # Navigate to the project directory
 cd flux-cipher-guard
@@ -45,48 +55,58 @@ npm run dev
 
 ### Environment Configuration
 
-The application uses the following environment variables:
+Configure your environment variables:
 
 ```env
+# Network Configuration
 NEXT_PUBLIC_CHAIN_ID=11155111
-NEXT_PUBLIC_RPC_URL=https://sepolia.infura.io/v3/b18fb7e6ca7045ac83c41157ab93f990
-NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID=2ec9743d0d0cd7fb94dee1a7e6d33475
-NEXT_PUBLIC_INFURA_API_KEY=b18fb7e6ca7045ac83c41157ab93f990
+NEXT_PUBLIC_RPC_URL=your_rpc_endpoint
+
+# Wallet Connect
+NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID=your_project_id
+
+# Contract Address (update after deployment)
 NEXT_PUBLIC_CONTRACT_ADDRESS=0x0000000000000000000000000000000000000000
 ```
 
-## Smart Contract
+## 🔗 Smart Contract Architecture
 
-The platform includes a Solidity smart contract (`FluxCipherGuard.sol`) that implements:
+The platform's core functionality is powered by a sophisticated Solidity contract that implements:
 
-- FHE-encrypted risk assessments
-- Governance proposals and voting
-- Member reputation system
-- Encrypted data storage
-- Access control mechanisms
+- **🔒 FHE-Encrypted Risk Assessments**: Secure risk data processing
+- **🗳️ Privacy-Preserving Governance**: Anonymous voting mechanisms
+- **👥 Reputation Management**: Decentralized member scoring
+- **💾 Encrypted Data Storage**: On-chain privacy protection
+- **🔐 Access Control**: Role-based permissions
 
-### Contract Functions
+### Key Contract Functions
 
-- `createRiskAssessment()`: Create encrypted risk assessments
-- `createProposal()`: Submit governance proposals
-- `castVote()`: Vote on proposals with encrypted weights
-- `encryptData()`: Store encrypted data on-chain
-- `updateReputation()`: Manage member reputation scores
+```solidity
+// Risk Management
+function createRiskAssessment(string memory riskType, string memory description, euint32 riskScore, euint32 confidenceLevel)
 
-## Usage
+// Governance
+function createProposal(string memory title, string memory description, uint256 duration)
+function castVote(uint256 proposalId, ebool support, euint32 weight)
 
-1. **Connect Wallet**: Use the wallet connection interface to link your Web3 wallet
-2. **Access Dashboard**: View encrypted risk data and analytics
-3. **Create Assessments**: Submit new risk assessments with FHE encryption
-4. **Participate in Governance**: Create proposals and vote on DAO decisions
-5. **Manage Data**: Encrypt and store sensitive information securely
+// Data Encryption
+function encryptData(string memory dataHash, euint32 encryptionKey)
+```
 
-## Development
+## 💡 Usage Guide
+
+1. **🔌 Wallet Connection**: Connect your Web3 wallet to access the platform
+2. **📊 Dashboard Access**: View encrypted risk analytics and metrics
+3. **📝 Risk Assessment**: Create and submit encrypted risk evaluations
+4. **🗳️ Governance Participation**: Vote on proposals and create new ones
+5. **🔐 Data Management**: Securely encrypt and store sensitive information
+
+## 🛠️ Development
 
 ### Available Scripts
 
 ```bash
-# Development server
+# Start development server
 npm run dev
 
 # Build for production
@@ -95,33 +115,35 @@ npm run build
 # Preview production build
 npm run preview
 
-# Lint code
+# Lint and fix code
 npm run lint
 ```
 
 ### Project Structure
 
 ```
-src/
-├── components/          # React components
-│   ├── ui/             # shadcn/ui components
-│   ├── WalletConnection.tsx
-│   └── RiskDashboard.tsx
-├── hooks/              # Custom React hooks
-│   └── useContract.ts  # Web3 contract interactions
-├── lib/                # Utility functions
-│   └── wallet.ts       # Wallet configuration
-├── pages/              # Page components
-└── contracts/        # Smart contracts
-    └── FluxCipherGuard.sol
+flux-cipher-guard/
+├── 📁 src/
+│   ├── 📁 components/          # React components
+│   │   ├── 📁 ui/             # shadcn/ui components
+│   │   ├── 🔌 WalletConnection.tsx
+│   │   └── 📊 RiskDashboard.tsx
+│   ├── 📁 hooks/              # Custom React hooks
+│   │   └── 🔗 useContract.ts  # Web3 contract interactions
+│   ├── 📁 lib/                # Utility functions
+│   │   └── 💳 wallet.ts       # Wallet configuration
+│   └── 📁 pages/              # Page components
+├── 📁 contracts/              # Smart contracts
+│   └── 🔒 FluxCipherGuard.sol
+└── 📄 package.json
 ```
 
-## Deployment
+## 🚀 Deployment
 
 ### Vercel Deployment
 
 1. Connect your GitHub repository to Vercel
-2. Configure environment variables in Vercel dashboard
+2. Configure environment variables in the dashboard
 3. Deploy automatically on push to main branch
 
 ### Manual Deployment
@@ -134,14 +156,17 @@ npm run build
 # The dist/ folder contains the production build
 ```
 
-## Security
+## 🔒 Security Features
 
-- All sensitive data is encrypted using FHE
-- Wallet connections are secured with end-to-end encryption
-- Smart contract interactions are gas-optimized
-- Access control is enforced at the contract level
+- **🛡️ FHE Encryption**: All sensitive data encrypted using Fully Homomorphic Encryption
+- **🔐 End-to-End Security**: Wallet connections secured with advanced cryptography
+- **⚡ Gas Optimization**: Smart contract interactions optimized for efficiency
+- **🎯 Access Control**: Role-based permissions enforced at contract level
+- **🔍 Zero-Knowledge**: Risk calculations performed without exposing data
 
-## Contributing
+## 🤝 Contributing
+
+We welcome contributions! Please follow these steps:
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
@@ -149,14 +174,17 @@ npm run build
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-## License
+## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## Support
+## 🆘 Support
 
-For support and questions, please open an issue on GitHub or contact the development team.
+For support and questions:
+- Open an issue on GitHub
+- Contact the development team
+- Check the documentation
 
 ---
 
-**Built with ❤️ for the decentralized future**
+**🔮 Built for the privacy-first decentralized future**

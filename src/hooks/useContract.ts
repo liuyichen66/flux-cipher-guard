@@ -184,6 +184,45 @@ export const useFluxCipherGuard = () => {
     });
   };
 
+  const updateDataAccess = async (
+    dataId: number,
+    isAccessible: boolean
+  ) => {
+    if (!address) throw new Error('Wallet not connected');
+    
+    return writeContract({
+      address: CONTRACT_ADDRESS as `0x${string}`,
+      abi: CONTRACT_ABI,
+      functionName: 'updateDataAccess',
+      args: [dataId, isAccessible],
+    });
+  };
+
+  const revokeDataAccess = async (dataId: number) => {
+    if (!address) throw new Error('Wallet not connected');
+    
+    return writeContract({
+      address: CONTRACT_ADDRESS as `0x${string}`,
+      abi: CONTRACT_ABI,
+      functionName: 'revokeDataAccess',
+      args: [dataId],
+    });
+  };
+
+  const transferDataOwnership = async (
+    dataId: number,
+    newOwner: string
+  ) => {
+    if (!address) throw new Error('Wallet not connected');
+    
+    return writeContract({
+      address: CONTRACT_ADDRESS as `0x${string}`,
+      abi: CONTRACT_ABI,
+      functionName: 'transferDataOwnership',
+      args: [dataId, newOwner],
+    });
+  };
+
   return {
     // Contract state
     isMember: isMember as boolean,
@@ -203,5 +242,8 @@ export const useFluxCipherGuard = () => {
     castVote,
     executeProposal,
     encryptData,
+    updateDataAccess,
+    revokeDataAccess,
+    transferDataOwnership,
   };
 };
